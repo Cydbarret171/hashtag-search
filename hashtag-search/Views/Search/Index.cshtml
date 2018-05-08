@@ -1,0 +1,108 @@
+﻿@model hashtag_search.Models.ResultViewModel
+@{
+    ViewBag.Title = "Search";
+}
+
+<br />
+@if (Model.HasError)
+{
+    <hr />
+    <div class="row">
+        <div style="background-color: maroon; color:white" class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+            <p style="width: 100%">Search Error: @Model.ErrorMessage</p>
+        </div>
+    </div>
+    <hr />
+}
+
+<form action="/Search/Search" method="post">
+    <input id="LastTweetId"
+           name="LastTweetId"
+           type="hidden"
+           value="@Model.PreviousTweetId" />
+    <input id="NextTweetId"
+           name="NextTweetId"
+           type="hidden"
+           value="@Model.NewLastTweetId" />
+    <input id="LastPage"
+           name="LastPage"
+           type="hidden"
+           value="@Model.PreviousPage" />
+
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-1 col-md-offset-3 col-md-1 col-sm-offset-3 col-sm-1">
+            @Html.Label("Search: ")
+        </div>
+        <div class="col-lg-6 col-md-7 col-sm-8 col-xs-12">
+            <input type="text" placeholder="Enter hashtag to search for..." name="Search" value="@Model.LastRequest.Search" style="width: 100%">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-1 col-md-offset-3 col-md-1 col-sm-offset-3 col-sm-1 col-xs-offset-3 col-xs-2">
+            @Html.Label("Count: ")
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
+            <input type="number" name="PageSize" value="@Model.LastRequest.PageSize" style="width:50px">
+        </div>
+        @if (Model.Tweets != null && Model.Tweets.statuses != null && Model.Tweets.statuses.Any())
+        {
+            <div class="col-lg-offset-1 col-lg-1 col-md-offset-1 col-md-1 col-sm-offset-1 col-sm-1 col-xs-offset-1 col-xs-2">
+                @Html.Label("Page: ")
+            </div>
+            <div class="col-lg-1">
+                <input type="number" name="Page" value="@Model.LastRequest.Page" style="width:50px" />
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-1 col-md-offset-3 col-md-1 col-sm-offset-3 col-sm-1">
+            <br />
+            <input type="submit" value="Go" class="input-sm" />
+        </div>
+    </div>
+</form>
+@if (Model.IsSearch && !Model.HasError)
+{
+    if (Model.Tweets != null && Model.Tweets.statuses != null && Model.Tweets.statuses.Any())
+    {
+        <hr />
+        <div class="row">
+            <ul class="list-group col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+                @foreach (var item in Model.Tweets.statuses.ToList())
+                {
+                    <li class="list-group-item" style="width: 100%">
+                        <div style="padding-top:10px; padding-bottom: 10px;">
+                            <img style="float:left; height:40px; width:40px; margin-right:5px" src="@item.user.profile_image_url" />
+                            <span style="padding-top: 15px;"><b>@item.user.name</b></span> <p style="font-size:14px; color: darkgray"><i>@Html.Raw("@")@item.user.screen_name</i></p>
+                            <p>@item.full_text</p>
+                            <p style="font-size: 14px; color: gray">@item.created_at</p>
+                            <br />
+                            <span style="font-size: 14px; color: lightslategray; margin-right:15px;">Likes: @item.favorite_count</span><span style="font-size: 14px; color: lightslategray">Retweets: @item.retweet_count</span>
+                            <button onclick="window.open('https://twitter.com/intent/like?tweet_id=@item.id_str')" style="float:right;" class="btn btn-primary">Like</button>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    else if (Model.LastRequest.PageSize > 100)
+    {
+        <hr />
+        <div class="row">
+            <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+                <p style="width: 100%">Please choose a count between 1 and 100.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <hr />
+        <div class="row">
+            <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+                <p style="width: 100%">There were no results found. Please try searching for another hashtag.</p>
+            </div>
+        </div>
+    }
+}
+<br />
