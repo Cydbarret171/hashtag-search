@@ -8,8 +8,8 @@
 {
     <hr />
     <div class="row">
-        <div style="background-color: maroon; color:white" class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
-            <p style="width: 100%">Search Error: @Model.ErrorMessage</p>
+        <div class="error-pane col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+            <p class="full-width">Search Error: @Model.ErrorMessage</p>
         </div>
     </div>
     <hr />
@@ -34,7 +34,7 @@
             @Html.Label("Search: ")
         </div>
         <div class="col-lg-6 col-md-7 col-sm-8 col-xs-12">
-            <input type="text" placeholder="Enter hashtag to search for..." name="Search" value="@Model.LastRequest.Search" style="width: 100%">
+            <input type="text" placeholder="Enter hashtag to search for..." name="Search" value="@Model.LastRequest.Search" class="full-width">
         </div>
     </div>
     <br />
@@ -43,7 +43,7 @@
             @Html.Label("Count: ")
         </div>
         <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
-            <input type="number" name="PageSize" value="@Model.LastRequest.PageSize" style="width:50px">
+            <input type="number" name="PageSize" value="@Model.LastRequest.PageSize" class="fifty-pixel-width" >
         </div>
         @if (Model.Tweets != null && Model.Tweets.statuses != null && Model.Tweets.statuses.Any())
         {
@@ -51,7 +51,7 @@
                 @Html.Label("Page: ")
             </div>
             <div class="col-lg-1">
-                <input type="number" name="Page" value="@Model.LastRequest.Page" style="width:50px" />
+                <input type="number" name="Page" value="@Model.LastRequest.Page" class="fifty-pixel-width" />
             </div>
         }
     </div>
@@ -71,15 +71,17 @@
             <ul class="list-group col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
                 @foreach (var item in Model.Tweets.statuses.ToList())
                 {
-                    <li class="list-group-item" style="width: 100%">
-                        <div style="padding-top:10px; padding-bottom: 10px;">
-                            <img style="float:left; height:40px; width:40px; margin-right:5px" src="@item.user.profile_image_url" />
-                            <span style="padding-top: 15px;"><b>@item.user.name</b></span> <p style="font-size:14px; color: darkgray"><i>@Html.Raw("@")@item.user.screen_name</i></p>
+                    <li class="list-group-item full-width">
+                        <div class="twitter-list-tweet">
+                            <img class="twitter-profile-image float-left" src="@item.user.profile_image_url" />
+                            <span class="fifteen-point-padding-top"><b>@item.user.name</b></span> 
+                            <p class="fourteen-point-font twitter-screen-name"><i>@Html.Raw("@")@item.user.screen_name</i></p>
                             <p>@item.full_text</p>
-                            <p style="font-size: 14px; color: gray">@item.created_at</p>
+                            <p class="fourteen-point-font twitter-time-stamp">@item.created_at</p>
                             <br />
-                            <span style="font-size: 14px; color: lightslategray; margin-right:15px;">Likes: @item.favorite_count</span><span style="font-size: 14px; color: lightslategray">Retweets: @item.retweet_count</span>
-                            <button onclick="window.open('https://twitter.com/intent/like?tweet_id=@item.id_str')" style="float:right;" class="btn btn-primary">Like</button>
+                            <span class="fourteen-point-font fifteen-point-margin-right light-slate-gray">Likes: @item.favorite_count</span>
+                            <span class="fourteen-point-font light-slate-gray">Retweets: @item.retweet_count</span>
+                            <button class="btn btn-primary float-right" onclick="window.open('https://twitter.com/intent/like?tweet_id=@item.id_str')">Like</button>
                         </div>
                     </li>
                 }
@@ -91,7 +93,7 @@
         <hr />
         <div class="row">
             <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
-                <p style="width: 100%">Please choose a count between 1 and 100.</p>
+                <p class="full-width">Please choose a count between 1 and 100.</p>
             </div>
         </div>
     }
@@ -100,7 +102,7 @@
         <hr />
         <div class="row">
             <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
-                <p style="width: 100%">There were no results found. Please try searching for another hashtag.</p>
+                <p class="full-width">There were no results found. Please try searching for another hashtag.</p>
             </div>
         </div>
     }

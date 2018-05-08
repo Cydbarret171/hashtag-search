@@ -16,6 +16,62 @@
     white-space: normal;
 }
 
+.full-width {
+    width:100%;
+}
+
+.fifty-pixel-width {
+    width:50px;
+}
+
+.fourteen-point-font {
+    font-size:14px;
+}
+
+.fifteen-point-margin-right {
+    margin-right: 15px;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.light-slate-gray{
+    color:lightslategray;
+}
+
+.twitter-profile-image {
+    height: 40px;
+    width: 40px;
+    margin-right: 5px;
+}
+
+.fifteen-point-padding-top {
+    padding-top: 15px;
+}
+
+.twitter-list-tweet {
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+.twitter-screen-name {
+    color: darkgray;
+}
+
+.twitter-time-stamp {
+    color:gray;
+}
+
+.error-pane {
+    background-color: maroon;
+    color: white;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 /*input,
 select,
