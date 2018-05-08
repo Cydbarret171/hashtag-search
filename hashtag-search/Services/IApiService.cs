@@ -7,7 +7,7 @@ namespace hashtag_search.Services
     {
         void Initialize();
 
-        TwitterSearchResponse Search(string searchParameter, int? pageSize, string maxId = "");
+        TwitterSearchResponse Search(string searchParameter, int? pageSize, string maxId = "", string sinceId = "");
 
         string GetError();
 

@@ -28,7 +28,7 @@ namespace hashtag_search.Services
             Authentication = new TwitterAuthentication();
         }
 
-        public TwitterSearchResponse Search(string searchParameter, int? pageSize, string maxId = "")
+        public TwitterSearchResponse Search(string searchParameter, int? pageSize, string maxId = "", string sinceId = "")
         {
             var requestUrl = string.Format(_url, searchParameter);
 
@@ -40,6 +40,11 @@ namespace hashtag_search.Services
             if (!string.IsNullOrEmpty(maxId))
             {
                 requestUrl = $"{requestUrl}&max_id={HttpUtility.UrlEncode(maxId)}";
+            }
+
+            if (!string.IsNullOrEmpty(sinceId))
+            {
+                requestUrl = $"{requestUrl}&since_id={HttpUtility.UrlEncode(sinceId)}";
             }
 
             return MakeSearchRequest($"{requestUrl}&tweet_mode=extended");

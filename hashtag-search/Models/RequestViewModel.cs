@@ -10,7 +10,7 @@ namespace hashtag_search.Models
     {
         public RequestViewModel()
         {
-            PageSize = 10;
+            PageSize = 5;
             LastPage = 1;
             Page = 1;
         }

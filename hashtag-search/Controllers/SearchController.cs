@@ -8,11 +8,6 @@ using System.Web.Mvc;
 
 namespace hashtag_search.Controllers
 {
-   /**  
-       1.) PAGING
-       2.) Make inline css external style sheet
-   ***/
-
     public class SearchController : Controller
     {
         public ITwitterApiService TwitterService { get; }
@@ -28,9 +23,9 @@ namespace hashtag_search.Controllers
         }
 
         /// <summary>
-        /// Take in view model with search term, type, and page size.
+        /// Take in view model with search term and paging information
         /// 
-        /// Default page size is 10
+        /// Default page size is 5
         /// </summary>
         /// 
         /// <returns>
@@ -60,13 +55,15 @@ namespace hashtag_search.Controllers
                 {
                     var maxId = string.Empty;
 
+                    var sinceId = string.Empty;
+
                     var shouldCheckMaxId = request.LastPage.HasValue && request.Page.HasValue;
 
                     if (shouldCheckMaxId && request.LastPage > request.Page.Value) maxId = request.LastTweetId;
 
-                    if (shouldCheckMaxId && request.LastPage < request.Page.Value) maxId = request.NextTweetId;
+                    if (shouldCheckMaxId && request.LastPage < request.Page.Value) sinceId = request.NextTweetId;
 
-                    searchResult = TwitterService.Search(requestSearchParameter, request.PageSize, maxId);
+                    searchResult = TwitterService.Search(requestSearchParameter, request.PageSize, maxId, sinceId);
 
                     if (TwitterService.HasError())
                     {
