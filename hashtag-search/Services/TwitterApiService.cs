@@ -36,8 +36,6 @@ namespace hashtag_search.Services
         public TwitterSearchResponse PagedSearch(RequestViewModel searchRequest)
         {
             var searchResult = new TwitterSearchResponse();
-            
-            var maxId = string.Empty;
 
             searchResult = Search(searchRequest.Search);
 
