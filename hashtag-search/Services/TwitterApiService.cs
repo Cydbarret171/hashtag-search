@@ -36,6 +36,8 @@ namespace hashtag_search.Services
 
         public TwitterSearchResponse Search(string searchParameter)
         {
+            SetError(string.Empty);
+
             var requestUrl = string.Format(_url, HttpUtility.UrlEncode(searchParameter));
             
             return MakeSearchRequest(requestUrl);
