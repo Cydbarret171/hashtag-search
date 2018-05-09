@@ -14,21 +14,14 @@
     </div>
     <hr />
 }
+    <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+        <h4>Search 1500 tweets in last 5-7 days for the last 100 uses of a hashtag.</h4>
+        <h6><i>Note: Twitter Search API does not index all tweets containing a hashtag.</i></h6>
+        <br/>
+    </div>
 
 <form action="/Search/Search" method="post">
-    <input id="LastTweetId"
-           name="LastTweetId"
-           type="hidden"
-           value="@Model.PreviousTweetId" />
-    <input id="NextTweetId"
-           name="NextTweetId"
-           type="hidden"
-           value="@Model.NewLastTweetId" />
-    <input id="LastPage"
-           name="LastPage"
-           type="hidden"
-           value="@Model.PreviousPage" />
-
+    <input id="" type="hidden" name="lastSearch" value="@Model.LastRequest.Search" />
     <div class="row">
         <div class="col-lg-offset-3 col-lg-1 col-md-offset-3 col-md-1 col-sm-offset-3 col-sm-1">
             @Html.Label("Search: ")
@@ -43,9 +36,9 @@
             @Html.Label("Count: ")
         </div>
         <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
-            <input type="number" name="PageSize" value="@Model.LastRequest.PageSize" class="fifty-pixel-width" >
+            <input type="number" name="PageSize" value="@Model.LastRequest.PageSize" class="fifty-pixel-width">
         </div>
-        @if (Model.Tweets != null && Model.Tweets.statuses != null && Model.Tweets.statuses.Any() || !string.IsNullOrEmpty(Model.LastRequest.LastTweetId))
+        @if (Model.Tweets != null && Model.Tweets.statuses != null && Model.Tweets.statuses.Any() || Model.LastRequest.Page > 1)
         {
             <div class="col-lg-offset-1 col-lg-1 col-md-offset-1 col-md-1 col-sm-offset-1 col-sm-1 col-xs-offset-1 col-xs-2">
                 @Html.Label("Page: ")
@@ -62,7 +55,26 @@
         </div>
     </div>
 </form>
-@if (Model.IsSearch && !Model.HasError)
+
+@if (Model.LastRequest.PageSize > 100)
+{
+    <hr />
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+            <p class="full-width">Please choose a page size between 1 and 100.</p>
+        </div>
+    </div>
+}
+else if (Model.MaxResults.HasValue && Model.MaxResults.Value < (Model.LastRequest.Page.Value - 1) * Model.LastRequest.PageSize && Model.LastRequest.Page > 1)
+{
+    <hr />
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
+            <p class="full-width">You have reached the end of the @Model.MaxResults.Value results.</p>
+        </div>
+    </div>
+}
+else if (Model.IsSearch && !Model.HasError)
 {
     if (Model.Tweets != null && Model.Tweets.statuses != null && Model.Tweets.statuses.Any())
     {
@@ -74,7 +86,7 @@
                     <li class="list-group-item full-width">
                         <div class="twitter-list-tweet">
                             <img class="twitter-profile-image float-left" src="@item.user.profile_image_url" />
-                            <span class="fifteen-point-padding-top"><b>@item.user.name</b></span> 
+                            <span class="fifteen-point-padding-top"><b>@item.user.name</b></span>
                             <p class="fourteen-point-font twitter-screen-name"><i>@Html.Raw("@")@item.user.screen_name</i></p>
                             <p>@item.full_text</p>
                             <p class="fourteen-point-font twitter-time-stamp">@item.created_at</p>
@@ -86,15 +98,6 @@
                     </li>
                 }
             </ul>
-        </div>
-    }
-    else if (Model.LastRequest.PageSize > 100)
-    {
-        <hr />
-        <div class="row">
-            <div class="col-lg-offset-3 col-lg-7 col-md-offset-3 col-md-8 col-sm-offset-3 col-sm-9 col-xs-offset-3 col-xs-12">
-                <p class="full-width">Please choose a count between 1 and 100.</p>
-            </div>
         </div>
     }
     else

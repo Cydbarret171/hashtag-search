@@ -38,53 +38,46 @@ namespace hashtag_search.Controllers
         {
             var requestSearchParameter = request.Search;
 
+            if (!requestSearchParameter.Contains("#"))
+            {
+                requestSearchParameter = $"#{requestSearchParameter}";
+                request.Search = requestSearchParameter;
+            }
+
+            if(request.LastSearch != requestSearchParameter)
+            {
+                request.LastSearch = requestSearchParameter;
+                request.Page = 1;
+                request.PageSize = 5;
+            }
+
             var nextViewModel = new ResultViewModel
             {
                 LastRequest = request,
-                IsSearch = true,
-                NewLastTweetId = request.NextTweetId,
-                PreviousPage = request.LastPage.Value,
-                PreviousTweetId = request.LastTweetId
+                IsSearch = true
             };
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !string.IsNullOrEmpty(request.Search))
             {
-                var searchResult = new TwitterSearchResponse();
+                var searchResult = TwitterService.PagedSearch(request);
 
-                if (!string.IsNullOrEmpty(requestSearchParameter))
+                if (TwitterService.HasError())
                 {
-                    var maxId = string.Empty;
-
-                    var sinceId = string.Empty;
-
-                    var shouldCheckMaxId = request.LastPage.HasValue && request.Page.HasValue;
-
-                    if (shouldCheckMaxId && request.LastPage > request.Page.Value) maxId = request.LastTweetId;
-
-                    if (shouldCheckMaxId && request.LastPage < request.Page.Value) sinceId = request.NextTweetId;
-
-                    searchResult = TwitterService.Search(requestSearchParameter, request.PageSize, maxId, sinceId);
-
-                    if (TwitterService.HasError())
-                    {
-                        nextViewModel.HasError = true;
-                        nextViewModel.ErrorMessage = TwitterService.GetError();
-                    }
-
-                    if (searchResult != null && searchResult.statuses != null && searchResult.statuses.Any())
-                    {
-                        var nextMaxId = searchResult.statuses.Last().id_str;
-
-                        if (nextMaxId != request.NextTweetId)
-                        {
-                            nextViewModel.NewLastTweetId = nextMaxId;
-                            nextViewModel.PreviousTweetId = request.NextTweetId;
-                            nextViewModel.PreviousPage = request.Page;
-                        }
-                    }
-
-                    nextViewModel.Tweets = searchResult;
+                    nextViewModel.HasError = true;
+                    nextViewModel.ErrorMessage = TwitterService.GetError();
                 }
+
+                nextViewModel.Tweets = searchResult;
+
+                var pageSize = request.PageSize.Value;
+
+                var skip = (request.Page.Value - 1) * pageSize;
+
+                var take = pageSize;
+
+                nextViewModel.MaxResults = nextViewModel.Tweets.statuses.Count();
+
+                nextViewModel.Tweets.statuses = nextViewModel.Tweets.statuses.Skip(skip).Take(take).ToList();
             }
             
             return View("Index", nextViewModel); 

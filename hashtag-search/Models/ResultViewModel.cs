@@ -13,7 +13,6 @@ namespace hashtag_search.Models
             Tweets = new TwitterSearchResponse();
             HasError = false;
             IsSearch = false;
-            PreviousPage = 1;
         }
 
         public RequestViewModel LastRequest { get; set; }
@@ -26,10 +25,6 @@ namespace hashtag_search.Models
 
         public bool IsSearch { get; set; }
 
-        public string NewLastTweetId { get; set; }
-
-        public string PreviousTweetId { get; set; }
-
-        public int? PreviousPage { get; set; }
+        public int? MaxResults { get; set; }
     }
 }

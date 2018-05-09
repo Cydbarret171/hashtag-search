@@ -12,8 +12,8 @@ namespace hashtag_search.Services
 {
     public class TwitterApiService : ITwitterApiService
     {
-        private const string _url = "https://api.twitter.com/1.1/search/tweets.json?q={0}&result_type=popular";
-
+        private const string _url = "https://api.twitter.com/1.1/search/tweets.json?q={0}&result_type=popular&count=100&tweet_mode=extended";
+        
         private TwitterAuthentication Authentication { get; set; }
 
         private string LastError { get; set; }
@@ -28,26 +28,22 @@ namespace hashtag_search.Services
             Authentication = new TwitterAuthentication();
         }
 
-        public TwitterSearchResponse Search(string searchParameter, int? pageSize, string maxId = "", string sinceId = "")
+        public TwitterSearchResponse PagedSearch(RequestViewModel searchRequest)
         {
-            var requestUrl = string.Format(_url, searchParameter);
+            var searchResult = new TwitterSearchResponse();
+            
+            var maxId = string.Empty;
 
-            if (pageSize.HasValue)
-            {
-                requestUrl = $"{requestUrl}&count={HttpUtility.UrlEncode(pageSize.Value.ToString())}";
-            }
+            searchResult = Search(searchRequest.Search);
 
-            if (!string.IsNullOrEmpty(maxId))
-            {
-                requestUrl = $"{requestUrl}&max_id={HttpUtility.UrlEncode(maxId)}";
-            }
+            return searchResult;
+        }
 
-            if (!string.IsNullOrEmpty(sinceId))
-            {
-                requestUrl = $"{requestUrl}&since_id={HttpUtility.UrlEncode(sinceId)}";
-            }
-
-            return MakeSearchRequest($"{requestUrl}&tweet_mode=extended");
+        public TwitterSearchResponse Search(string searchParameter)
+        {
+            var requestUrl = string.Format(_url, HttpUtility.UrlEncode(searchParameter));
+            
+            return MakeSearchRequest(requestUrl);
         }
         
         public string GetError()
