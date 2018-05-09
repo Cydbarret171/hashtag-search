@@ -36,29 +36,29 @@ namespace hashtag_search.Controllers
         [HttpPost]
         public ActionResult Search(RequestViewModel request)
         {
-            var requestSearchParameter = request.Search;
-
-            if (!requestSearchParameter.Contains("#"))
-            {
-                requestSearchParameter = $"#{requestSearchParameter}";
-                request.Search = requestSearchParameter;
-            }
-
-            if(request.LastSearch != requestSearchParameter)
-            {
-                request.LastSearch = requestSearchParameter;
-                request.Page = 1;
-                request.PageSize = 5;
-            }
-
             var nextViewModel = new ResultViewModel
             {
                 LastRequest = request,
                 IsSearch = true
             };
 
+            var requestSearchParameter = request.Search;
+
             if (ModelState.IsValid && !string.IsNullOrEmpty(request.Search))
             {
+                if (!requestSearchParameter.Contains("#"))
+                {
+                    requestSearchParameter = $"#{requestSearchParameter}";
+                    request.Search = requestSearchParameter;
+                }
+
+                if (request.LastSearch != requestSearchParameter)
+                {
+                    request.LastSearch = requestSearchParameter;
+                    request.Page = 1;
+                    request.PageSize = 5;
+                }
+
                 var searchResult = TwitterService.PagedSearch(request);
 
                 if (TwitterService.HasError())
