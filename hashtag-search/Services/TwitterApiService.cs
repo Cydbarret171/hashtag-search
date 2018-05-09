@@ -28,6 +28,11 @@ namespace hashtag_search.Services
             Authentication = new TwitterAuthentication();
         }
 
+        //https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators
+        //"The Search API is not a complete index of all Tweets, but instead an index of recent Tweets. The index includes between 6-9 days of Tweets."
+        //
+        //Twitter Search Service will always search for 100 occurences and use search request page and pagesize to determine what to return.
+        //No search term will incur 100 tweet limit from testing of trending and popular hash tags. 15 seems to be the upper limit but API says it can handle up to 100.
         public TwitterSearchResponse PagedSearch(RequestViewModel searchRequest)
         {
             var searchResult = new TwitterSearchResponse();

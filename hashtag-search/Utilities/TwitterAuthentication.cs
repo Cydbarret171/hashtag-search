@@ -13,9 +13,11 @@ namespace hashtag_search.Utilities
     {
         private string BearerToken { get; set; }
 
-        private const string _consumerKey = "lOeUOX2vWUUt4NRYz99vJ3aJY";
+        //base 64 encoded so plain key not stored
+        private const string _consumerKeyBase64 = "bE9lVU9YMnZXVVV0NE5SWXo5OXZKM2FKWQ==";  
 
-        private const string _consumerSecret = "0JK0Q5gq1IJ1XJAE6zSfevVMqS58OSqOX3TI2gLRLbhe3bw8Dm";
+        //base 64 encoded so plain secret not stored
+        private const string _consumerSecret64 = "MEpLMFE1Z3ExSUoxWEpBRTZ6U2ZldlZNcVM1OE9TcU9YM1RJMmdMUkxiaGUzYnc4RG0=";
 
         private const string _url = "https://api.twitter.com/oauth2/token";
 
@@ -29,11 +31,17 @@ namespace hashtag_search.Utilities
             return BearerToken;
         }
 
+        private string Base64DecodeString(string encodedString)
+        {
+            var base64EncodedBytes = Convert.FromBase64String(encodedString);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
         private string GetBase64RequestToken()
         {
-            var concatenated = HttpUtility.UrlEncode(_consumerKey) + ":" + HttpUtility.UrlEncode(_consumerSecret);
+            var concatenated = HttpUtility.UrlEncode(Base64DecodeString(_consumerKeyBase64)) + ":" + HttpUtility.UrlEncode(Base64DecodeString(_consumerSecret64));
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(concatenated);
+            var bytes = Encoding.UTF8.GetBytes(concatenated);
 
             return Convert.ToBase64String(bytes);
         }
