@@ -9,8 +9,6 @@ namespace hashtag_search.Services
 
         TwitterSearchResponse Search(string searchParameter);
 
-        TwitterSearchResponse PagedSearch(RequestViewModel searchRequest);
-
         string GetError();
 
         bool HasError();

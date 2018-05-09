@@ -59,7 +59,7 @@ namespace hashtag_search.Controllers
                     request.PageSize = 5;
                 }
 
-                var searchResult = TwitterService.PagedSearch(request);
+                var searchResult = TwitterService.Search(requestSearchParameter);
 
                 if (TwitterService.HasError())
                 {
